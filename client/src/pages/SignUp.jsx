@@ -97,12 +97,7 @@ export default function SignUp() {
                 'Sign-Up'
               )}
             </Button>
-            <Button
-              className='border border-purple-500 hover:bg-gradient-to-r hover:from-purple-500 hover:to-blue-500 text-black hover:text-white'
-              type='button'
-            >
-              Sign Up with Google
-            </Button>
+            
            <OAuth/>
           </form>
           <div className='flex gap-2 text-sm mt-5'>
