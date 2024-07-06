@@ -8,33 +8,37 @@ const location=useLocation()
   const [tab,setTab]=useState('')
   useEffect(()=>{
     const urlParams=new URLSearchParams(location.search);
-    const tabFormUrl=urlParams.get('tab');
+    const tabFromUrl=urlParams.get('tab');
    
     if(tabFromUrl){
       setTab(tabFromUrl);
     }
   },[location.search]);
   return (
-    <Sidebar classname='w-full md:w-56'>
-      <Sidebar.Item>
-        <Sidebar.ItemGroup> 
-          <Link to='/dashboard?tab=profile'>
-                
-            <Sidebar.Item active={tab==='profile'} icon={HiUser} label={'User'} labelColor='dark' as='div'> 
-            
-             Profile 
-             
-            </Sidebar.Item> 
-          </Link>
-            
-            <Sidebar.Item icon={HiArrowSmRight} label={'User'} classname='cursor-pointer'>
+    <Sidebar>
+        <Sidebar.Items>
+            <Sidebar.ItemGroup>
+                <Link to='/dashboard?tab=profile'>
+            <Sidebar.Item 
+            active={tab==='profile'} 
+            icon={HiUser}
+             label={'User'}
+             labelColor='dark'
+             as='div'
+             >
              Profile
             </Sidebar.Item>
+            </Link>
+            <Sidebar.Item icon={HiArrowSmRight}  classname='cursor-pointer'>
+               sign out
+           
+            </Sidebar.Item>
+
 
 
             </Sidebar.ItemGroup>
           
-        </Sidebar.Item>
+        </Sidebar.Items>
     </Sidebar>
   )
 }
