@@ -15,14 +15,18 @@ const location=useLocation()
     }
   },[location.search]);
   return (
-    <Sidebar>
-        <Sidebar.Item>
-            <Sidebar.ItemGroup>
-                <Link to='/dashboard?tab=profile'>
-            <Sidebar.Item active={tab==='profile'} icon={HiUser} label={'User'} labelColor='dark'>
-             Profile
-            </Sidebar.Item>
-            </Link>
+    <Sidebar classname='w-full md:w-56'>
+      <Sidebar.Item>
+        <Sidebar.ItemGroup> 
+          <Link to='/dashboard?tab=profile'>
+                
+            <Sidebar.Item active={tab==='profile'} icon={HiUser} label={'User'} labelColor='dark' as='div'> 
+            
+             Profile 
+             
+            </Sidebar.Item> 
+          </Link>
+            
             <Sidebar.Item icon={HiArrowSmRight} label={'User'} classname='cursor-pointer'>
              Profile
             </Sidebar.Item>
