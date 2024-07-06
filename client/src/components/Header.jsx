@@ -14,7 +14,7 @@ export default function Header() {
   const dispatch = useDispatch();
 
   const handleSignout = () => {
-    // Implement your signout logic here
+    
     console.log('Signing out...');
   };
 
