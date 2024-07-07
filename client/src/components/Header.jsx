@@ -13,21 +13,11 @@ export default function Header() {
   const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
 
-  const handleSignout = async () => {
-    try {
-      const res = await fetch('/api/user/signout', {
-        method: 'POST',
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        console.log(data.message);
-      } else {
-        dispatch(signoutSuccess());
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
+  const handleSignout = () => {
+    // Implement your signout logic here
+    console.log('Signing out...');
   };
+
   return (
     <Navbar className='border-b-2'>
       <div className='flex items-center self-center whitespace-nowrap text-sm sm:text-xl font-semibold text-gray-800 dark:text-white'>
