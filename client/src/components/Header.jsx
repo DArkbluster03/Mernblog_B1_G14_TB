@@ -2,9 +2,9 @@ import React from 'react';
 import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { FaMoon,FaSun } from 'react-icons/fa';
+import { FaMoon, FaSun } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { signoutSuccess } from '../redux/user/userSlice';
 import { toggleTheme } from '../redux/theme/themeSlice';
 
 export default function Header() {
@@ -13,9 +13,20 @@ export default function Header() {
   const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
 
-  const handleSignout = () => {
-    // Implement your signout logic here
-    console.log('Signing out...');
+  const handleSignout = async () => {
+    try {
+      const res = await fetch('/api/user/signout', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -44,14 +55,16 @@ export default function Header() {
         </Button>
 
         <Button className='w-12 h-10 hidden sm:inline' color='gray' pill onClick={()=>dispatch(toggleTheme())}>
-        {theme === 'light' ? <FaSun /> : <FaMoon />}
+          {theme === 'light' ? <FaSun /> : <FaMoon />}
         </Button>
         {currentUser ? (
           <Dropdown
             arrowIcon={false}
             inline
             label={
-              <Avatar alt='user' img={currentUser.profilePicture} rounded />
+              <Avatar alt='user' 
+              img={currentUser.profilePicture} 
+              rounded />
             }
           >
             <Dropdown.Header>
