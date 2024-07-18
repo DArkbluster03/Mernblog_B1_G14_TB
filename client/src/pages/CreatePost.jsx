@@ -22,7 +22,7 @@ export default function CreatePost() {
 
   const navigate = useNavigate();
 
-  const handleUpdloadImage = async () => {
+  const handleUploadImage = async () => {
     try {
       if (!file) {
         setImageUploadError('Please select an image');
@@ -58,6 +58,7 @@ export default function CreatePost() {
       console.log(error);
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -82,6 +83,7 @@ export default function CreatePost() {
       setPublishError('Something went wrong');
     }
   };
+
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
@@ -119,8 +121,9 @@ export default function CreatePost() {
             gradientDuoTone='purpleToBlue'
             size='sm'
             outline
-            onClick={handleUpdloadImage}
+            onClick={handleUploadImage}
             disabled={imageUploadProgress}
+            className='flex items-center space-x-2 px-4 py-2 rounded-md text-white bg-gradient-to-r from-purple-500 to-blue-500 border border-blue-500 transition duration-300 ease-in-out hover:opacity-75'
           >
             {imageUploadProgress ? (
               <div className='w-16 h-16'>
@@ -151,7 +154,11 @@ export default function CreatePost() {
             setFormData({ ...formData, content: value });
           }}
         />
-        <Button type='submit' gradientDuoTone='purpleToPink'>
+        <Button
+          type='submit'
+          gradientDuoTone='purpleToPink'
+          className='w-full px-4 py-2 rounded-md text-white bg-gradient-to-r from-purple-500 to-pink-500 border border-pink-500 transition duration-300 ease-in-out hover:opacity-75'
+        >
           Publish
         </Button>
         {publishError && (
