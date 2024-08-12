@@ -10,64 +10,56 @@ export default function DashUsers() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState('');
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const res = await fetch(`/api/user/getusers`);
         const data = await res.json();
-        console.log('Fetched users:', data); // Added console log
         if (res.ok) {
           setUsers(data.users);
           if (data.users.length < 9) {
             setShowMore(false);
           }
-        } else {
-          console.log('Error fetching users:', data.message);
         }
       } catch (error) {
-        console.log('Fetch error:', error.message);
+        console.log(error.message);
       }
     };
     if (currentUser.isAdmin) {
       fetchUsers();
     }
-  }, [currentUser._id, currentUser.isAdmin]);
+  }, [currentUser._id]);
 
   const handleShowMore = async () => {
     const startIndex = users.length;
     try {
       const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
       const data = await res.json();
-      console.log('Fetched more users:', data); // Added console log
       if (res.ok) {
         setUsers((prev) => [...prev, ...data.users]);
         if (data.users.length < 9) {
           setShowMore(false);
         }
-      } else {
-        console.log('Error fetching more users:', data.message);
       }
     } catch (error) {
-      console.log('Fetch error:', error.message);
+      console.log(error.message);
     }
   };
 
   const handleDeleteUser = async () => {
     try {
-      const res = await fetch(`/api/user/delete/${userIdToDelete}`, {
-        method: 'DELETE',
-      });
-      const data = await res.json();
-      console.log('Delete user response:', data); // Added console log
-      if (res.ok) {
-        setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
-        setShowModal(false);
-      } else {
-        console.log('Error deleting user:', data.message);
-      }
+        const res = await fetch(`/api/user/delete/${userIdToDelete}`, {
+            method: 'DELETE',
+        });
+        const data = await res.json();
+        if (res.ok) {
+            setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
+            setShowModal(false);
+        } else {
+            console.log(data.message);
+        }
     } catch (error) {
-      console.log('Delete error:', error.message);
+        console.log(error.message);
     }
   };
 

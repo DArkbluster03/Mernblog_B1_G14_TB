@@ -1,4 +1,4 @@
-import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
+import { Alert, FileInput, Select, TextInput } from 'flowbite-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -14,6 +14,17 @@ import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+const GradientButton = ({ type = 'button', children, onClick, disabled }) => (
+  <button
+    type={type}
+    onClick={onClick}
+    disabled={disabled}
+    className='border-2 border-transparent bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded-lg px-4 py-2 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed'
+  >
+    {children}
+  </button>
+);
+
 export default function UpdatePost() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
@@ -23,7 +34,7 @@ export default function UpdatePost() {
   const { postId } = useParams();
 
   const navigate = useNavigate();
-    const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     try {
@@ -83,6 +94,7 @@ export default function UpdatePost() {
       console.log(error);
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -107,6 +119,7 @@ export default function UpdatePost() {
       setPublishError('Something went wrong');
     }
   };
+
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Update post</h1>
@@ -129,10 +142,15 @@ export default function UpdatePost() {
             }
             value={formData.category}
           >
+           
             <option value='uncategorized'>Select a category</option>
             <option value='javascript'>JavaScript</option>
             <option value='reactjs'>React.js</option>
             <option value='nextjs'>Next.js</option>
+            <option value='MongoDB'>MongoDB</option>
+            <option value='Express'>Express</option>
+            <option value='CSS'>CSS</option>
+            <option value='HTML'>HTML</option>
           </Select>
         </div>
         <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
@@ -141,11 +159,8 @@ export default function UpdatePost() {
             accept='image/*'
             onChange={(e) => setFile(e.target.files[0])}
           />
-          <Button
+          <GradientButton
             type='button'
-            gradientDuoTone='purpleToBlue'
-            size='sm'
-            outline
             onClick={handleUpdloadImage}
             disabled={imageUploadProgress}
           >
@@ -159,7 +174,7 @@ export default function UpdatePost() {
             ) : (
               'Upload Image'
             )}
-          </Button>
+          </GradientButton>
         </div>
         {imageUploadError && <Alert color='failure'>{imageUploadError}</Alert>}
         {formData.image && (
@@ -179,9 +194,9 @@ export default function UpdatePost() {
             setFormData({ ...formData, content: value });
           }}
         />
-        <Button type='submit' gradientDuoTone='purpleToPink'>
+        <GradientButton type='submit'>
           Update post
-        </Button>
+        </GradientButton>
         {publishError && (
           <Alert className='mt-5' color='failure'>
             {publishError}

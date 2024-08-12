@@ -239,12 +239,21 @@ export default function DashProfile() {
           placeholder='password'
           onChange={handleChange}
         />
-        <Button type='submit' gradientDuoTone='purpleToBlue' outline disabled={loading || imageFileUploading}>
+        <Button
+          type='submit'
+          className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition-all
+                      ${loading || imageFileUploading ? 'opacity-50 cursor-not-allowed' : 'bg-gradient-to-r from-purple-500 via-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-600 hover:scale-105 hover:shadow-lg'}
+                      border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500`}
+          disabled={loading || imageFileUploading}
+        >
           {loading ? 'Loading...' : 'Update'}
         </Button>
         {currentUser.isAdmin && (
-          <Link to={'/create-post'}>
-            <Button type='button' gradientDuoTone='purpleToPink' className='w-full'>
+          <Link to='/create-post'>
+            <Button
+              type='button'
+              className='w-full py-2 px-4 rounded-lg font-semibold text-white bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 transition-transform transform hover:scale-105 hover:brightness-90 hover:shadow-xl'
+            >
               Create a post
             </Button>
           </Link>

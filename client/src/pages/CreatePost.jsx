@@ -1,12 +1,7 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
 import { useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
@@ -36,8 +31,7 @@ export default function CreatePost() {
       uploadTask.on(
         'state_changed',
         (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setImageUploadProgress(progress.toFixed(0));
         },
         (error) => {
@@ -95,19 +89,19 @@ export default function CreatePost() {
             required
             id='title'
             className='flex-1'
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           />
           <Select
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           >
             <option value='uncategorized'>Select a category</option>
             <option value='javascript'>JavaScript</option>
             <option value='reactjs'>React.js</option>
             <option value='nextjs'>Next.js</option>
+            <option value='MongoDB'>MongoDB</option>
+            <option value='Express'>Express</option>
+            <option value='CSS'>CSS</option>
+            <option value='HTML'>HTML</option>
           </Select>
         </div>
         <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
@@ -123,7 +117,7 @@ export default function CreatePost() {
             outline
             onClick={handleUploadImage}
             disabled={imageUploadProgress}
-            className='flex items-center space-x-2 px-4 py-2 rounded-md text-white bg-gradient-to-r from-purple-500 to-blue-500 border border-blue-500 transition duration-300 ease-in-out hover:opacity-75'
+            className='flex items-center space-x-2 px-4 py-2 rounded-md text-white bg-gradient-to-r from-purple-500 to-blue-500 border border-blue-500 transition duration-300 ease-in-out hover:bg-gradient-to-l hover:from-blue-500 hover:to-purple-500 hover:scale-105 hover:shadow-lg'
           >
             {imageUploadProgress ? (
               <div className='w-16 h-16'>
@@ -157,7 +151,7 @@ export default function CreatePost() {
         <Button
           type='submit'
           gradientDuoTone='purpleToPink'
-          className='w-full px-4 py-2 rounded-md text-white bg-gradient-to-r from-purple-500 to-pink-500 border border-pink-500 transition duration-300 ease-in-out hover:opacity-75'
+          className='w-full px-4 py-2 rounded-md text-white bg-gradient-to-r from-purple-500 to-pink-500 border border-pink-500 transition duration-300 ease-in-out hover:bg-gradient-to-l hover:from-pink-500 hover:to-purple-500 hover:scale-105 hover:shadow-lg'
         >
           Publish
         </Button>
