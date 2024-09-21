@@ -1,12 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const authApi = createApi({
-  reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({ 
-    baseUrl: 'http://localhost:5000/api/auth',
-    credentials: 'include' 
+export const authApi = createApi({
+  reducerPath: "authApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:5000/api/auth",
+    credentials: "include",
   }),
-  tagTypes: ['User'],  // Define tag types for caching
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (newUser) => ({
@@ -28,16 +27,20 @@ const authApi = createApi({
         method: "POST",
       }),
     }),
-    getUsers: builder.query({
-      query: () => '/users',
-      providesTags: ['User'],
+    getUser: builder.query({
+      query: () => ({
+        url: "/users",
+        method: "GET",
+      }),
+      refetchOnMount: true,
+      invalidatesTags: ["User"],
     }),
     deleteUser: builder.mutation({
       query: (userId) => ({
         url: `/users/${userId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ["User"],
     }),
     updateUserRole: builder.mutation({
       query: ({ userId, role }) => ({
@@ -45,8 +48,8 @@ const authApi = createApi({
         method: "PUT",
         body: { role },
       }),
-      refetchOnMount:true,
-      invalidatesTags: ['User'],
+      refetchOnMount: true,
+      invalidatesTags: ["User"],
     }),
   }),
 });
@@ -55,7 +58,7 @@ export const {
   useRegisterUserMutation,
   useLoginUserMutation,
   useLogoutUserMutation,
-  useGetUsersQuery,  // Ensure this is exported
+  useGetUserQuery,
   useDeleteUserMutation,
   useUpdateUserRoleMutation,
 } = authApi;

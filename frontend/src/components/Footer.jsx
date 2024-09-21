@@ -33,7 +33,7 @@ export default function FooterCom() {
                 </li>
                 <li>
                   <a
-                    href='/about'
+                    href='/about-us'
                     target='_blank'
                     rel='noopener noreferrer'
                     className='hover:underline'

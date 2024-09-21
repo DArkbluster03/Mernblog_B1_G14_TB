@@ -1,5 +1,3 @@
-// routes/blog.js
-
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/verifyToken');
@@ -10,9 +8,8 @@ const Comment = require('../model/comment.model');
 // Create post (protected route)
 router.post('/create-post', verifyToken, isAdmin, async (req, res) => {
     try {
-        const { title, content, category, coverImg, } = req.body;
+        const { title, content, category, coverImg } = req.body;
 
-        // console.log("UserId: ", req.userId)
         const newPost = new Blog({
             ...req.body,
             author: req.userId,
@@ -25,14 +22,14 @@ router.post('/create-post', verifyToken, isAdmin, async (req, res) => {
     }
 });
 
-// Get all posts (public route)
+// Get all posts (public route with filtering)
 router.get('/', async (req, res) => {
     try {
-        const { search, category, location  } = req.query;
-        // console.log(search)
+        const { search, category, location } = req.query;
 
         let query = {};
 
+        // Search filter
         if (search) {
             query = {
                 ...query,
@@ -43,13 +40,18 @@ router.get('/', async (req, res) => {
             };
         }
 
-        if (category) {
-            query = { ...query, category };
+        // Category filter (exact match, case-insensitive if stored as lowercase)
+        if (category && category !== 'All Categories') {
+            query = { ...query, category: category };
         }
+
+        // Location filter (if applicable)
         if (location) {
             query = { ...query, location };
         }
-        const posts = await Blog.find(query).populate('author', 'email').sort({ createdAt: -1 }); // Adjust populate fields as necessary
+
+        // Fetch filtered posts
+        const posts = await Blog.find(query).populate('author', 'email').sort({ createdAt: -1 });
         res.status(200).send(posts);
     } catch (error) {
         console.error('Error fetching posts:', error);
@@ -58,20 +60,16 @@ router.get('/', async (req, res) => {
 });
 
 // Get a single post (protected route)
-router.get('/:id',async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const postId = req.params.id;
-        // console.log(postId)
-        
         const post = await Blog.findById(postId).populate('author', 'email username');
-        // console.log(post)
 
         if (!post) {
             return res.status(404).send({ message: 'Post not found' });
         }
 
         const comments = await Comment.find({ postId: postId }).populate('user', 'username email');
-
         res.status(200).send({ post, comments });
     } catch (error) {
         console.error('Error fetching post:', error);
@@ -79,26 +77,24 @@ router.get('/:id',async (req, res) => {
     }
 });
 
-
-// update a post (protected route)
+// Update a post (protected route)
 router.patch('/update-post/:id', verifyToken, isAdmin, async (req, res) => {
     try {
         const postId = req.params.id;
-        // const { title, content, category } = req.body;
         const updatedPost = await Blog.findByIdAndUpdate(postId, { ...req.body }, { new: true });
-        
+
         if (!updatedPost) {
             return res.status(404).send({ message: 'Post not found' });
         }
-        
+
         res.status(200).send({ message: 'Post updated successfully', post: updatedPost });
     } catch (error) {
-        console.error('Error fetching post:', error);
-        res.status(500).send({ message: 'Failed to fetch post' });
+        console.error('Error updating post:', error);
+        res.status(500).send({ message: 'Failed to update post' });
     }
-})
+});
 
-// delete a post with the related comment
+// Delete a post with the related comments
 router.delete('/:id', async (req, res) => {
     try {
         const postId = req.params.id;
@@ -120,38 +116,34 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-//related blog
+// Related blog posts
 router.get('/related/:id', async (req, res) => {
     try {
-      const { id } = req.params;
-  
-      // Check if id is defined
-      if (!id) {
-        return res.status(400).send({ message: 'Blog ID is required' });
-      }
-  
-      const blog = await Blog.findById(id);
-  
-      if (!blog) {
-        return res.status(404).send({ message: 'Blog post not found' });
-      }
-  
-      // Create a regex to match similar titles
-      const titleRegex = new RegExp(blog.title.split(' ').join('|'), 'i');
-  
-      const relatedQuery = {
-        _id: { $ne: id }, // Exclude the current blog post
-        title: { $regex: titleRegex } // Match similar titles
-      };
-  
-      const relatedPosts = await Blog.find(relatedQuery);
-  
-      res.status(200).send(relatedPosts);
-    } catch (error) {
-      console.error('Error fetching related posts:', error);
-      res.status(500).send({ message: 'Failed to fetch related posts' });
-    }
-  });
+        const { id } = req.params;
 
+        if (!id) {
+            return res.status(400).send({ message: 'Blog ID is required' });
+        }
+
+        const blog = await Blog.findById(id);
+
+        if (!blog) {
+            return res.status(404).send({ message: 'Blog post not found' });
+        }
+
+        const titleRegex = new RegExp(blog.title.split(' ').join('|'), 'i');
+
+        const relatedQuery = {
+            _id: { $ne: id },
+            title: { $regex: titleRegex }
+        };
+
+        const relatedPosts = await Blog.find(relatedQuery);
+        res.status(200).send(relatedPosts);
+    } catch (error) {
+        console.error('Error fetching related posts:', error);
+        res.status(500).send({ message: 'Failed to fetch related posts' });
+    }
+});
 
 module.exports = router;

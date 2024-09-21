@@ -17,7 +17,7 @@ app.use(cors({
   credentials: true,
 }));
 
-const authRoutes = require('./src/routes/auth.user.route');
+const authRoutes = require('./src/routes/auth.user');
 const blogRoutes = require('./src/routes/blog.route');
 const commentRoutes = require('./src/routes/comment.route');
 
@@ -30,7 +30,7 @@ app.use('/api/comments', commentRoutes);
 async function main() {
   await mongoose.connect(process.env.MONGODB_URL);
   app.get('/', (req, res) => {
-    res.send('Hotel Rooftop Server is Running..!');
+    res.send('Mernblog Server is Running..!');
   });
 }
 

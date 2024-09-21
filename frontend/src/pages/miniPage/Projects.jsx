@@ -1,5 +1,7 @@
 import React from 'react';
-import CallToAction from '../components/CallToAction';
+import CallToAction2 from '../../components/CallToAction2';
+
+
  // Make sure this path is correct based on your project structure
 
 const Projects = () => {
@@ -9,7 +11,7 @@ const Projects = () => {
       <p className='text-md text-gray-500'>
         Build fun and engaging projects while learning HTML, CSS, and JavaScript!
       </p>
-    <CallToAction/>
+        <CallToAction2/>
     </div>
   );
 };

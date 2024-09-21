@@ -1,86 +1,105 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useRegisterUserMutation } from '../../redux/features/auth/authApi'; // Ensure correct path
+/* eslint-disable react/no-unescaped-entities */
+import React, { useState } from "react";
+import { useRegisterUserMutation } from "../../redux/features/auth/authApi";
+import { Link, useNavigate } from "react-router-dom";
 
-const Register = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
-    const [registerUser, { isLoading, error }] = useRegisterUserMutation(); // Add useRegisterUserMutation hook
-    const navigate = useNavigate();
+const RegisterForm = () => {
+  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [password, setPassword] = useState("");
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setMessage('');
-        try {
-            await registerUser({ username, email, password }).unwrap();
-            navigate('/login'); // Redirect to login on successful registration
-        } catch (err) {
-            setMessage('Registration failed. Please try again.');
-        }
+  const navigate = useNavigate();
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const data = {
+      username,
+      email,
+      password,
     };
 
-    return (
-        <div className='min-h-screen flex flex-col md:flex-row items-center justify-center mt-16'>
-            {/* Header and Description */}
-            <div className='flex-1 max-w-lg p-6 md:p-12'>
-                <Link to='/' className='font-bold dark:text-white text-4xl'>
-                    <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-                        Mern's
-                    </span>
-                    Blog
-                </Link>
-                <p className='text-sm mt-5'>
-                    This is a demo project. You can sign up with your email and password or with Google.
-                </p>
-            </div>
+    try {
+      await registerUser(data).unwrap();
+      alert("Registration successful");
+      navigate('/login');
+    } catch (err) {
+      setMessage('Registration failed');
+    }
+  };
 
-            {/* Registration Form */}
-            <div className='flex-1 max-w-sm bg-white p-8 mt-8 md:mt-0'>
-                <h2 className='text-4xl font-semibold mb-6'>Please Register</h2>
-                <form onSubmit={handleSubmit} className='space-y-6'>
-                    <input 
-                        type="text" 
-                        value={username}
-                        placeholder='Username'
-                        required
-                        onChange={(e) => setUsername(e.target.value)}
-                        className='w-full bg-gray-100 focus:outline-none px-6 py-4 rounded text-lg'
-                    />
-                    <input 
-                        type="email" 
-                        value={email}
-                        placeholder='Email'
-                        required
-                        onChange={(e) => setEmail(e.target.value)}
-                        className='w-full bg-gray-100 focus:outline-none px-6 py-4 rounded text-lg'
-                    />
-                    <input 
-                        type="password" 
-                        value={password}
-                        placeholder='Password'
-                        required
-                        onChange={(e) => setPassword(e.target.value)}
-                        className='w-full bg-gray-100 focus:outline-none px-6 py-4 rounded text-lg'
-                    />
-                    {message && <p className='text-red-500 text-lg'>{message}</p>}
-                    <button
-                        type='submit'
-                        className='w-full mt-6 bg-blue-500 hover:bg-blue-700 text-white font-medium rounded-md py-3 text-lg'
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Registering...' : 'Register'}
-                    </button>
-                </form>
-                <p className='my-6 text-center text-lg'>
-                    Already have an account?
-                    <Link to="/login" className='text-red-700 italic'> Login</Link>
-                    here.
-                </p>
-            </div>
+  return (
+    <div className='flex justify-center items-center min-h-screen'>
+      <div className='flex items-start justify-between gap-16'>
+        {/* Left Side - Branding */}
+        <div className='text-center mt-16'>
+          <Link to='/' className='font-bold text-5xl'>
+            <span className='px-3 py-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
+              Mern's
+            </span>
+            Blog
+          </Link>
+          <p className='text-lg mt-6'>
+            This is a demo project. You can sign up with your email and password .
+          </p>
         </div>
-    );
-}
 
-export default Register;
+        {/* Right Side - Registration Box */}
+        <div className="max-w-sm bg-white p-10 shadow-lg rounded-lg">
+          <h2 className="text-3xl font-semibold pb-5 text-center">Please Register</h2>
+          <form
+            onSubmit={handleRegister}
+            className="space-y-5"
+          >
+            <input
+              type="text"
+              value={username}
+              className="w-full bg-bgPrimary focus:outline-none px-5 py-3 border border-gray-300 rounded-md"
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="Username"
+              required
+            />
+
+            <input
+              type="text"
+              value={email}
+              className="w-full bg-bgPrimary focus:outline-none px-5 py-3 border border-gray-300 rounded-md"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+            />
+
+            <input
+              type="password"
+              value={password}
+              className="w-full bg-bgPrimary focus:outline-none px-5 py-3 border border-gray-300 rounded-md"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+            />
+            {
+              message && <p className="text-red-500">{message}</p> // Display error message if any
+            }
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 rounded-md"
+            >
+              Register
+            </button>
+          </form>
+
+          <p className="my-5 text-center">
+            Already have an account? Please
+            <Link to="/login" className="text-indigo-700 italic">
+              {" "}Login
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RegisterForm;

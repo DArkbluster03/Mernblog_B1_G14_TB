@@ -1,83 +1,90 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState } from 'react';
+import { useLoginUserMutation } from '../../redux/features/auth/authApi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useLoginUserMutation } from '../../redux/features/auth/authApi';
 import { setUser } from '../../redux/features/auth/authSlice';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
-    const [loginUser, { isLoading: loginLoading }] = useLoginUserMutation();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        const data = { email, password };
+  const [loginUser, { isLoading: loginLoading }] = useLoginUserMutation();
+  const navigate = useNavigate();
 
-        try {
-            const response = await loginUser(data).unwrap();
-            const { token, user } = response;
-            dispatch(setUser({ user }));
-            alert("Login successful");
-            navigate('/');
-        } catch (error) {
-            setMessage("Please provide a valid email and password");
-        }
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const data = {
+      email,
+      password,
     };
 
-    return (
-        <div className='min-h-screen flex flex-col md:flex-row items-center justify-center mt-16'>
-            {/* Header and Description */}
-            <div className='flex-1 max-w-lg p-6 md:p-12 flex flex-col items-center md:items-start gap-6'>
-                <Link to='/' className='font-bold dark:text-white text-5xl'>
-                    <span className='px-4 py-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-                        Mern's
-                    </span>
-                    Blog
-                </Link>
-                <p className='text-lg mt-4 text-center md:text-left'>
-                    This is a demo project. You can sign up with your email and password or with Google.
-                </p>
-            </div>
+    try {
+      const response = await loginUser(data).unwrap();
+      const { token, user } = response;
+      dispatch(setUser({ user }));
+      alert('Login successful');
+      navigate('/');
+    } catch (err) {
+      setMessage('Please provide a valid email and password!');
+    }
+  };
 
-            {/* Login Form */}
-            <div className='flex-1 max-w-md bg-white p-8 md:p-10 mx-auto mt-12 md:mt-0'>
-                <h2 className='text-4xl font-semibold mb-6'>Please Login</h2>
-                <form onSubmit={handleLogin} className='space-y-6'>
-                    <input 
-                        type="email" 
-                        value={email}
-                        placeholder='Email'
-                        required
-                        onChange={(e) => setEmail(e.target.value)}
-                        className='w-full bg-gray-100 focus:outline-none px-6 py-4 rounded text-lg'
-                    />
-                    <input 
-                        type="password" 
-                        value={password}
-                        placeholder='Password'
-                        required
-                        onChange={(e) => setPassword(e.target.value)}
-                        className='w-full bg-gray-100 focus:outline-none px-6 py-4 rounded text-lg'
-                    />
-                    {message && <p className='text-red-500 text-lg'>{message}</p>}
-                    <button
-                        disabled={loginLoading}
-                        className='w-full mt-6 bg-blue-500 hover:bg-blue-700 text-white font-medium rounded-md py-3 text-lg'
-                    >
-                        {loginLoading ? 'Logging in...' : 'Login'}
-                    </button>
-                </form>
-                <p className='my-6 text-center text-lg'>
-                    Don't have an account?
-                    <Link to="/register" className='text-red-700 italic'> Register</Link>
-                    here.
-                </p>
-            </div>
+  return (
+    <div className='flex justify-center items-center min-h-screen'>
+      <div className='flex items-start justify-between gap-16'>
+        {/* Left Side - Branding */}
+        <div className='text-center mt-16'> {/* Adjusted margin here to move branding higher */}
+          <Link to='/' className='font-bold text-5xl'> {/* Increased font size */}
+            <span className='px-3 py-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
+              Mern's
+            </span>
+            Blog
+          </Link>
+          <p className='text-lg mt-6'> {/* Increased font size for the description */}
+            This is a demo project. You can sign up with your email and password .
+          </p>
         </div>
-    );
+
+        {/* Right Side - Login Box */}
+        <div className='max-w-sm bg-white p-10 shadow-lg rounded-lg'>
+          <h2 className='text-3xl font-semibold pb-5 text-center'>Please login</h2> {/* Increased font size */}
+          <form onSubmit={handleLogin} className='space-y-5'>
+            <input
+              type="text"
+              value={email}
+              className='w-full bg-bgPrimary focus:outline-none px-5 py-3 border border-gray-300 rounded-md'
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+            />
+            <input
+              type="password"
+              value={password}
+              className='w-full bg-bgPrimary focus:outline-none px-5 py-3 border border-gray-300 rounded-md'
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+            />
+            {message && <p className="text-red-500">{message}</p>}
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className='w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 rounded-md'
+            >
+              Login
+            </button>
+          </form>
+          <p className='my-5 text-center'>
+            Don't have an account? 
+            <Link to="/register" className='text-indigo-700 italic'> Register </Link> here.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Login;
