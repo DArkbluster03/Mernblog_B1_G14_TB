@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const blogsApi = createApi({
   reducerPath: 'blogsApi',
   baseQuery: fetchBaseQuery({ 
-    baseUrl: 'http://localhost:5000/api/', 
+    baseUrl: 'https://api-neon-rho.vercel.app/api/', 
     credentials: 'include'
   }),
   tagTypes: ['Blogs'],
